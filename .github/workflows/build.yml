@@ -9,6 +9,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -28,13 +37,10 @@ jobs:
       - name: Unzip mobile_app
         run: unzip -q mobile_app.zip -d extracted_app
 
-      - name: Find Project Directory and Build
+      - name: Build APK
         run: |
-          # البحث عن المجلد الذي يحتوي على ملف pubspec.yaml داخل الملفات المفكوكة
-          PROJECT_DIR=$(find extracted_app -name "pubspec.yaml" -exec dirname {} \;)
-          echo "Found Flutter project at: $PROJECT_DIR"
-          
-          cd "$PROJECT_DIR"
+          # البحث المباشر عن مجلد المشروع والانتقال إليه بدقة
+          cd $(find extracted_app -type d -name "mobile_app" | head -n 1)
           flutter pub get
           flutter build apk --release
 
