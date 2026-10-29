@@ -30,7 +30,7 @@ jobs:
 
       - name: Build APK
         run: |
-          cd extracted_app/*/mobile_app || cd extracted_app/mobile_app || cd extracted_app
+          cd "$(find . -name "pubspec.yaml" -exec dirname {} \; | head -n 1)"
           flutter pub get
           flutter build apk --release
 
