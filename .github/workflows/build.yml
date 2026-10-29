@@ -26,20 +26,20 @@ jobs:
           channel: 'stable'
 
       - name: Unzip mobile_app
-        run: unzip mobile_app.zip
+        run: unzip -q mobile_app.zip -d extracted_app
 
-      - name: Get Dependencies
+      - name: Find Project Directory and Build
         run: |
-          cd mobile_app
+          # البحث عن المجلد الذي يحتوي على ملف pubspec.yaml داخل الملفات المفكوكة
+          PROJECT_DIR=$(find extracted_app -name "pubspec.yaml" -exec dirname {} \;)
+          echo "Found Flutter project at: $PROJECT_DIR"
+          
+          cd "$PROJECT_DIR"
           flutter pub get
-
-      - name: Build APK
-        run: |
-          cd mobile_app
           flutter build apk --release
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-          path: mobile_app/build/app/outputs/flutter-apk/app-release.apk
+          path: "**/outputs/flutter-apk/app-release.apk"
