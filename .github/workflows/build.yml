@@ -30,9 +30,7 @@ jobs:
 
       - name: Build APK
         run: |
-          TARGET_DIR=$(find extracted_app -name "pubspec.yaml" -exec dirname {} \; | head -n 1)
-          echo "Building in: $TARGET_DIR"
-          cd "$TARGET_DIR"
+          cd extracted_app/*/mobile_app || cd extracted_app/mobile_app || cd extracted_app
           flutter pub get
           flutter build apk --release
 
