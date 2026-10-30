@@ -10,8 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Unpack project
-        run: unzip -q -o watertank-project.zip -d proj
+        with:
+          fetch-depth: 0
+      - name: Unpack newest project zip
+        run: |
+          f=$(for z in watertank-project*.zip; do echo "$(git log -1 --format=%ct -- "$z") $z"; done | sort -n | tail -1 | cut -d' ' -f2-)
+          echo "Using: $f"
+          unzip -q -o "$f" -d proj
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
