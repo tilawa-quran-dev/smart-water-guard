@@ -13,16 +13,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Unzip
-        run: sudo apt-get update && sudo apt-get install -y unzip
-
-      - name: Extract Project Safely
-        run: |
-          unzip -o mobile_app.zip -d temp_extracted
-          # نقل محتويات المجلد المستخرج ليكون الجذر مباشره بغض النظر عن الأسماء المتداخلة
-          shopt -s dotglob
-          mv temp_extracted/*/* temp_extracted/ || mv temp_extracted/* .
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -34,6 +24,10 @@ jobs:
         with:
           flutter-version: '3.19.x'
           channel: 'stable'
+
+      - name: Create Flutter Project Structure
+        run: |
+          flutter create . --org com.smartwater --project-name smart_water_guard --platforms android
 
       - name: Build APK
         run: |
