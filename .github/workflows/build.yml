@@ -13,6 +13,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install Unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
+
+      - name: Extract Project
+        run: |
+          unzip -o mobile_app.zip -d extracted_app
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
@@ -27,6 +34,7 @@ jobs:
 
       - name: Build APK
         run: |
+          cd extracted_app
           flutter pub get
           flutter build apk --release
 
